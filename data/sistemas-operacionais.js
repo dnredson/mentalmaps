@@ -5,129 +5,176 @@ window.MENTAL_MAPS.so = {
   title: "Sistemas Operacionais",
   center: "Sistema Operacional",
   centerNote: "Gerência de recursos + abstrações + controle",
-  description: "Fundamentos, estruturas internas e escalonamento que já estudamos no Silberschatz.",
+  description: "Mapa hierárquico pelo Silberschatz: capítulo 1 e seções 2.1–2.3 revisados; próximos capítulos entram conforme avançamos.",
   branches: [
     {
       title: "Fundamentos",
       color: "#3f7fc4",
       concepts: [
         {
-          id: "so-role",
-          name: "Papel do SO",
-          definition: "O sistema operacional atua como intermediário entre aplicações e hardware, gerenciando recursos e oferecendo abstrações para execução dos programas.",
-          exam: "Saiba apresentar as duas visões clássicas: SO como alocador de recursos e como programa de controle.",
-          example: "CPU, memória, armazenamento e dispositivos de E/S são recursos compartilhados cuja utilização é coordenada pelo SO.",
-          links: ["Kernel", "Proteção", "Gerência de recursos"],
+          id: "so-role", name: "Papel do SO",
+          definition: "Intermediário entre aplicações e hardware; aloca recursos e controla a execução.",
+          exam: "Saiba explicar SO como alocador de recursos e como programa de controle.",
+          example: "CPU, memória, armazenamento e E/S são recursos coordenados pelo SO.",
+          links: ["Kernel", "Proteção", "Recursos"],
           question: "Quais são as duas formas clássicas de descrever o papel de um sistema operacional?",
-          answer: "Como alocador de recursos, distribuindo CPU, memória, armazenamento e dispositivos; e como programa de controle, supervisionando a execução e evitando usos incorretos do sistema."
+          answer: "Como alocador de recursos e como programa de controle."
         },
         {
-          id: "kernel",
-          name: "Kernel",
-          definition: "Parte central e privilegiada do sistema operacional, responsável por mecanismos fundamentais de gerência e proteção.",
-          exam: "Diferencie kernel de aplicações e associe o kernel à execução privilegiada e à mediação de recursos.",
-          example: "Uma aplicação solicita acesso a um arquivo por uma chamada de sistema; o kernel valida e realiza a operação.",
-          links: ["Chamadas de sistema", "Modo usuário/kernel", "Interrupções"],
-          question: "Por que aplicações comuns não deveriam acessar diretamente todos os recursos de hardware?",
-          answer: "Porque o kernel precisa mediar o acesso para manter proteção, isolamento, consistência e compartilhamento seguro dos recursos."
+          id: "kernel", name: "Kernel",
+          definition: "Parte central e privilegiada do sistema operacional.",
+          exam: "Associe kernel a mediação, proteção e execução privilegiada.",
+          example: "Uma aplicação solicita um serviço; o kernel valida e executa a operação protegida.",
+          links: ["Syscall", "Modo privilegiado", "Interrupções"],
+          question: "Por que aplicações comuns não acessam diretamente qualquer recurso de hardware?",
+          answer: "Porque o kernel media o acesso para manter proteção, isolamento e controle dos recursos."
         },
         {
-          id: "bootstrap",
-          name: "Bootstrap",
-          definition: "Processo inicial que prepara o hardware e carrega o núcleo do sistema operacional para a memória.",
-          exam: "Lembre que o computador precisa de um código inicial fora do SO completo para conseguir localizar e iniciar o kernel.",
-          example: "Firmware executa após a energização e transfere o controle para o carregador responsável por iniciar o sistema operacional.",
-          links: ["Firmware", "Kernel", "Inicialização"],
-          question: "Qual é a função do bootstrap no início de um computador?",
-          answer: "Inicializar componentes essenciais e carregar o sistema operacional, transferindo depois o controle para o kernel."
+          id: "interrupt", name: "Interrupção × polling",
+          definition: "Polling consulta repetidamente; interrupção permite que hardware/controlador avise a CPU.",
+          exam: "Interrupção de hardware é tipicamente assíncrona em relação à instrução atual.",
+          example: "Controlador do SSD gera interrupção quando uma leitura termina.",
+          links: ["E/S", "Driver", "DMA"],
+          question: "Qual é a diferença essencial entre polling e interrupção?",
+          answer: "No polling a CPU consulta o estado repetidamente; com interrupção o dispositivo/controlador sinaliza quando há um evento."
         }
       ]
     },
     {
-      title: "Eventos e interface com o kernel",
+      title: "Chamadas de sistema",
       color: "#4e9b8f",
       concepts: [
         {
-          id: "interrupt",
-          name: "Interrupções",
-          definition: "Mecanismo pelo qual a CPU desvia temporariamente a execução para tratar um evento.",
-          exam: "Entenda a vantagem sobre polling contínuo e a relação com E/S, temporizadores e escalonamento.",
-          example: "Uma placa de rede sinaliza a chegada de dados e a CPU executa uma rotina de tratamento.",
-          links: ["E/S", "Kernel", "Escalonamento"],
-          question: "Por que interrupções são úteis em comparação com polling contínuo?",
-          answer: "Porque permitem que a CPU execute outras tarefas e seja notificada quando um evento exige atenção, evitando consultas contínuas ao dispositivo."
+          id: "syscall", name: "Syscall",
+          definition: "Solicitação deliberada de um serviço do kernel por um programa.",
+          exam: "Não confunda syscall com interrupção de hardware ou exceção.",
+          example: "read(), write(), open() e fork().",
+          links: ["Kernel", "API", "Modo usuário/kernel"],
+          question: "O que diferencia syscall, exceção e interrupção?",
+          answer: "Syscall é uma solicitação deliberada do programa; exceção decorre da execução da instrução; interrupção é um evento assíncrono, geralmente de hardware."
         },
         {
-          id: "syscall",
-          name: "Chamadas de sistema",
-          definition: "Interface controlada usada por programas para solicitar serviços ao sistema operacional.",
-          exam: "Associe chamadas de sistema à transição controlada entre aplicação e serviços privilegiados.",
-          example: "Abrir um arquivo, criar um processo ou enviar dados por um socket exige serviços fornecidos pelo kernel.",
-          links: ["Kernel", "Proteção", "Modo usuário/kernel"],
-          question: "O que diferencia uma chamada de sistema de uma chamada de função comum?",
-          answer: "A chamada de sistema solicita um serviço privilegiado do kernel e envolve uma interface controlada entre o programa e o sistema operacional."
+          id: "api-syscall", name: "API × syscall",
+          definition: "A aplicação frequentemente chama uma função de API/biblioteca, e o runtime faz a ponte para a interface de chamadas de sistema.",
+          exam: "O programador normalmente não precisa conhecer a implementação interna da syscall.",
+          example: "read(fd, buf, count) fornece uma interface ao serviço de leitura.",
+          links: ["Biblioteca", "Runtime", "Kernel"],
+          question: "Por que API e chamada de sistema não são necessariamente a mesma coisa?",
+          answer: "Porque a API é a interface usada pelo programa; a biblioteca/runtime pode traduzir essa chamada para uma ou mais chamadas de sistema."
+        }
+      ]
+    },
+    {
+      title: "Processos — antecipado",
+      color: "#d17a32",
+      concepts: [
+        {
+          id: "states", name: "Estados de processo",
+          definition: "READY pode executar mas não tem CPU; RUNNING está na CPU; WAITING não pode continuar até um evento.",
+          exam: "Diferencie estado observado em cada instante de uma transição efetiva de estado.",
+          example: "E/S: RUNNING → WAITING → READY; depois scheduler pode levar READY → RUNNING.",
+          links: ["Scheduler", "E/S", "Ready queue"],
+          question: "Qual é a diferença essencial entre READY e WAITING?",
+          answer: "READY está apto a executar e só espera CPU; WAITING não pode prosseguir até que ocorra o evento aguardado."
+        },
+        {
+          id: "scheduler", name: "Scheduler",
+          definition: "Escolhe entre processos READY qual receberá a CPU.",
+          exam: "O scheduler não transfere dados do SSD nem executa a E/S.",
+          example: "P1 bloqueia por E/S; scheduler pode escolher P2 para executar.",
+          links: ["READY", "RUNNING", "Round Robin"],
+          question: "Quando uma E/S termina, por que o processo normalmente vai para READY e não diretamente para RUNNING?",
+          answer: "Porque ele voltou a estar apto, mas ainda precisa ser escolhido pelo scheduler para receber a CPU."
+        },
+        {
+          id: "rr", name: "Round Robin",
+          definition: "Escalonamento preemptivo com fila de prontos e quantum máximo por vez.",
+          exam: "Se o processo termina antes do quantum, o próximo começa imediatamente.",
+          example: "Quantum acabou sem término: RUNNING → READY e o processo volta ao fim da fila.",
+          links: ["Quantum", "FIFO", "Preempção"],
+          question: "O que acontece quando o quantum termina e o processo ainda tem CPU burst restante?",
+          answer: "Ele é preemptado, volta ao estado READY e normalmente entra no fim da fila de prontos."
+        },
+        {
+          id: "starvation-aging", name: "Starvation × aging",
+          definition: "Starvation é adiamento indefinido; aging aumenta gradualmente prioridade de quem espera.",
+          exam: "Aging é uma técnica clássica para mitigar starvation.",
+          example: "Processo de baixa prioridade ganha prioridade enquanto espera.",
+          links: ["Prioridade", "Justiça"],
+          question: "Como aging ajuda a combater starvation?",
+          answer: "Elevando progressivamente a prioridade de processos que aguardam por muito tempo."
+        }
+      ]
+    },
+    {
+      title: "Memória — antecipado",
+      color: "#7a62ad",
+      concepts: [
+        {
+          id: "mmu", name: "MMU",
+          definition: "Hardware que participa da tradução de endereços virtuais para físicos e da verificação de acesso.",
+          exam: "A CPU trabalha com endereços virtuais; a MMU participa da tradução antes do acesso à RAM.",
+          example: "Uma tradução não resolvida normalmente pode provocar uma exceção para tratamento do SO.",
+          links: ["Page table", "Memória virtual", "Page fault"],
+          question: "Qual é a função básica da MMU?",
+          answer: "Participar da tradução de endereços virtuais para físicos e aplicar verificações associadas ao acesso à memória."
+        },
+        {
+          id: "pagefault", name: "Page fault",
+          definition: "Exceção de memória que exige tratamento do SO; pode ocorrer porque uma página válida não está presente na RAM.",
+          exam: "Page fault não significa necessariamente erro.",
+          example: "Kernel carrega a página, atualiza estruturas e a instrução pode ser repetida.",
+          links: ["MMU", "Memória virtual", "Segmentation fault"],
+          question: "Um page fault significa necessariamente erro no programa?",
+          answer: "Não. Pode ser uma ocorrência normal de memória virtual quando uma página válida precisa ser trazida para a RAM."
+        },
+        {
+          id: "segfault", name: "Segmentation fault",
+          definition: "Consequência observável quando o SO considera um acesso de memória inválido e não pode resolvê-lo normalmente.",
+          exam: "Não trate page fault e segmentation fault como sinônimos.",
+          example: "Acesso a uma região sem permissão ou que não pertence ao espaço de endereçamento esperado.",
+          links: ["Page fault", "Proteção"],
+          question: "Qual é a diferença conceitual entre page fault e segmentation fault?",
+          answer: "Page fault é a exceção/tratamento de memória; muitos são normais. Segmentation fault ocorre quando o acesso é considerado inválido e não pode ser atendido normalmente."
+        }
+      ]
+    },
+    {
+      title: "E/S — antecipado",
+      color: "#4e9b8f",
+      concepts: [
+        {
+          id: "dma", name: "DMA",
+          definition: "Direct Memory Access permite que controladores transfiram blocos entre dispositivo e RAM sem a CPU copiar byte a byte.",
+          exam: "A CPU configura a operação e pode usar o tempo para outras tarefas.",
+          example: "Controlador transfere dados do SSD para a RAM e sinaliza a conclusão.",
+          links: ["Driver", "Controlador", "Interrupção"],
+          question: "Por que DMA pode reduzir o trabalho da CPU em uma operação de E/S?",
+          answer: "Porque o controlador pode transferir blocos diretamente entre dispositivo e memória, sem a CPU executar cada cópia individual."
+        },
+        {
+          id: "read-flow", name: "Fluxo de read()",
+          definition: "Syscall → kernel → autorização → filesystem/driver → WAITING → E/S → interrupção → READY → scheduler → RUNNING.",
+          exam: "Saiba identificar quem faz cada papel: kernel, driver/controlador, hardware e scheduler.",
+          example: "P1 bloqueia esperando SSD; P2 usa CPU; interrupção acorda P1 e o coloca na ready queue.",
+          links: ["Syscall", "DMA", "Estados", "Scheduler"],
+          question: "Quem muda um processo de WAITING para READY quando sua E/S termina?",
+          answer: "O kernel, ao tratar a conclusão da E/S, acorda o processo e o recoloca na fila de prontos."
         }
       ]
     },
     {
       title: "Estruturas de dados",
-      color: "#7a62ad",
+      color: "#6a7fb0",
       concepts: [
         {
-          id: "hash",
-          name: "Hash / tabela hash",
-          definition: "Uma função hash transforma uma chave em um valor ou índice; uma tabela hash usa esse resultado para organizar e localizar elementos.",
-          exam: "Não confunda função hash com estrutura de dados. Saiba explicar colisões e o ganho médio de busca.",
-          example: "Uma tabela pode localizar uma entrada por identificador sem percorrer sequencialmente todos os elementos.",
-          links: ["Colisão", "Busca", "Estruturas do kernel"],
-          question: "Qual é a diferença entre uma função hash e uma tabela hash?",
-          answer: "A função hash calcula um valor a partir da chave; a tabela hash é a estrutura que usa esse valor para armazenar e localizar elementos."
-        },
-        {
-          id: "kernel-structures",
-          name: "Listas, FIFO e árvores",
-          definition: "Kernels usam estruturas como listas encadeadas, filas FIFO e árvores balanceadas para organizar objetos e operações internas.",
-          exam: "O ponto importante é entender por que diferentes estruturas são escolhidas conforme o padrão de acesso e custo desejado.",
-          example: "O Linux oferece listas encadeadas em list.h, filas kfifo e árvores rubro-negras em rbtree.h.",
-          links: ["Complexidade", "Kernel Linux", "Hash"],
-          question: "Por que um kernel utiliza diferentes estruturas de dados em vez de uma única estrutura genérica?",
-          answer: "Porque operações distintas exigem diferentes compromissos de custo, ordenação, inserção, remoção e busca."
-        }
-      ]
-    },
-    {
-      title: "Escalonamento",
-      color: "#d17a32",
-      concepts: [
-        {
-          id: "rr",
-          name: "Round Robin",
-          definition: "Algoritmo preemptivo em que processos prontos recebem uma fatia de CPU chamada quantum e retornam ao fim da fila se não terminarem.",
-          exam: "Treine a linha do tempo. O detalhe decisivo é saber quando um processo chega, quando o quantum termina e como a fila é reorganizada.",
-          example: "Com quantum de 3 ms, um processo com burst de 8 ms usa 3 ms, volta à fila e aguarda nova vez.",
-          links: ["Quantum", "Preempção", "Fila de prontos"],
-          question: "O que acontece com o comportamento do Round Robin quando o quantum fica muito grande?",
-          answer: "Ele se aproxima do FCFS: há menos trocas de contexto, mas tende a piorar a responsividade."
-        },
-        {
-          id: "priority",
-          name: "Prioridade",
-          definition: "O escalonador pode selecionar processos segundo níveis de prioridade, de forma preemptiva ou não preemptiva.",
-          exam: "Considere sempre o risco de processos de baixa prioridade esperarem indefinidamente.",
-          example: "Se tarefas de alta prioridade chegam continuamente, uma tarefa de baixa prioridade pode nunca receber CPU.",
-          links: ["Starvation", "Aging", "Escalonamento"],
-          question: "Qual problema pode surgir em escalonamento estrito por prioridade?",
-          answer: "Starvation: processos de baixa prioridade podem ficar esperando indefinidamente."
-        },
-        {
-          id: "starvation-aging",
-          name: "Starvation e aging",
-          definition: "Starvation é espera potencialmente indefinida. Aging aumenta gradualmente a prioridade de processos que esperam muito tempo.",
-          exam: "A associação starvation → aging é uma relação clássica de causa/problema e técnica de mitigação.",
-          example: "Um processo inicialmente pouco prioritário sobe gradualmente até conseguir ser escolhido.",
-          links: ["Prioridade", "Justiça", "Escalonamento"],
-          question: "Como aging combate starvation?",
-          answer: "Elevando gradualmente a prioridade de quem espera, reduzindo a chance de adiamento indefinido."
+          id: "hash", name: "Tabela hash",
+          definition: "Função hash transforma a chave em índice; a tabela usa esse índice para organizar e localizar entradas.",
+          exam: "Busca média pode se aproximar de O(1), mas colisões precisam ser tratadas.",
+          example: "PID → função hash → bucket; colisão pode usar encadeamento.",
+          links: ["Colisão", "Bucket", "O(1) médio"],
+          question: "Por que calcular um hash ainda pode ser melhor do que procurar elemento por elemento?",
+          answer: "Porque um cálculo curto direciona a busca para uma pequena região da tabela, evitando uma varredura O(n) na média."
         }
       ]
     }
