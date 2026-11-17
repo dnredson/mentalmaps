@@ -30,9 +30,13 @@ O progresso de revisão é salvo localmente no navegador.
     ├── sistemas-operacionais.js
     ├── redes.js
     └── seguranca.js
+├── maps/
+│   └── sistemas-operacionais.md
+└── assets/
+    └── markmap-init.js
 ```
 
-O conteúdo fica separado da interface. Para adicionar novos conceitos, a preferência é editar apenas o arquivo da disciplina correspondente em `data/`.
+O conteúdo fica separado da interface. Sistemas Operacionais já usa um mapa hierárquico em Markdown renderizado com Markmap (`maps/sistemas-operacionais.md`). Os arquivos em `data/` continuam servindo à revisão ativa/perguntas. Redes e Segurança serão migrados para a mesma arquitetura conforme avançarmos.
 
 ## Recursos
 
