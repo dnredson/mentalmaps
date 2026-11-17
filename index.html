@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mapas mentais interativos para revisão do concurso da Unicamp.">
+  <title>Mapas Mentais — Concurso Unicamp</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="Início">
+      <span class="brand-mark">U</span>
+      <span>
+        <strong>Mapas Mentais</strong>
+        <small>Concurso Unicamp</small>
+      </span>
+    </a>
+
+    <nav class="top-actions" aria-label="Ações">
+      <button id="reviewBtn" class="btn btn-secondary" type="button">Pergunta surpresa</button>
+      <button id="printBtn" class="btn btn-secondary" type="button">Imprimir / PDF</button>
+    </nav>
+  </header>
+
+  <main id="app" class="app" tabindex="-1"></main>
+
+  <footer class="footer">
+    <span>Projeto incremental de revisão — MC504 · MC832 · MC942 · MO639</span>
+    <a href="https://github.com/dnredson/mentalmaps" target="_blank" rel="noreferrer">GitHub</a>
+  </footer>
+
+  <dialog id="reviewDialog" class="review-dialog">
+    <form method="dialog" class="review-card">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">Revisão ativa</p>
+          <h2 id="reviewSubject">Pergunta surpresa</h2>
+        </div>
+        <button class="icon-btn" value="close" aria-label="Fechar">×</button>
+      </div>
+      <p id="reviewQuestion" class="review-question"></p>
+      <div id="reviewAnswer" class="review-answer" hidden></div>
+      <div class="dialog-actions">
+        <button id="showAnswerBtn" type="button" class="btn btn-primary">Mostrar resposta</button>
+        <button id="nextQuestionBtn" type="button" class="btn btn-secondary">Outra pergunta</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="data/sistemas-operacionais.js"></script>
+  <script src="data/redes.js"></script>
+  <script src="data/seguranca.js"></script>
+  <script type="module" src="assets/markmap-init.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
