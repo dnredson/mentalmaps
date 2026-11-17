@@ -89,7 +89,108 @@
       </section>`;
   }
 
+  function renderMarkmapMap(map) {
+    activeMap = map;
+    activeConcept = null;
+    document.documentElement.style.setProperty('--subject', subjectColor(map.id));
+
+    app.innerHTML = `
+      <header class="map-header">
+        <div>
+          <div class="map-title-row">
+            <span class="subject-dot" aria-hidden="true"></span>
+            <div>
+              <p class="eyebrow">${map.code} · Silberschatz 9ª ed.</p>
+              <h1>${map.title}</h1>
+            </div>
+          </div>
+          <p>Mapa organizado pela sequência do livro. Conteúdo detalhado até 2.3; conceitos antecipados ficam ligados aos capítulos onde serão aprofundados.</p>
+        </div>
+        <div class="map-actions">
+          <a class="btn btn-secondary" href="#/">← Disciplinas</a>
+          <a class="btn btn-secondary" href="maps/sistemas-operacionais.md" target="_blank" rel="noreferrer">Ver Markdown</a>
+        </div>
+      </header>
+
+      <section class="study-status" aria-label="Progresso no livro">
+        <div><strong>✅ Revisado</strong><span>Capítulo 1 + 2.1–2.3</span></div>
+        <div><strong>▶️ Próximo</strong><span>2.4 — Tipos de Chamadas de Sistema</span></div>
+        <div><strong>🟡 Antecipado</strong><span>processos, RR, MMU/page fault, DMA/E/S</span></div>
+      </section>
+
+      <section class="markmap-shell">
+        <div class="markmap-head">
+          <div>
+            <p class="eyebrow">Mapa interativo</p>
+            <h2>Expanda, recolha, arraste e dê zoom</h2>
+          </div>
+          <div class="markmap-actions">
+            <button id="foldChapters" class="btn btn-secondary" type="button" disabled>Ver capítulos</button>
+            <button id="expandMap" class="btn btn-secondary" type="button" disabled>Expandir tudo</button>
+            <button id="fitMap" class="btn btn-secondary" type="button" disabled>Centralizar</button>
+          </div>
+        </div>
+        <markmap-view
+          id="osMarkmap"
+          src="./maps/sistemas-operacionais.md"
+          theme="cards"
+          layout="two-sided"
+          color-scheme="auto"
+          toolbar
+        ></markmap-view>
+        <p id="markmapStatus" class="map-help">Carregando o mapa…</p>
+      </section>
+
+      <section class="map-notes">
+        <article>
+          <span>✅</span>
+          <div><strong>Revisado</strong><p>Conteúdo que já estudamos na sequência do livro.</p></div>
+        </article>
+        <article>
+          <span>🟡</span>
+          <div><strong>Antecipado</strong><p>Já apareceu nas revisões, mas será estudado formalmente no capítulo indicado.</p></div>
+        </article>
+        <article>
+          <span>⏭️</span>
+          <div><strong>A estudar</strong><p>Roadmap para sabermos exatamente o que vem depois.</p></div>
+        </article>
+      </section>`;
+
+    const view = document.getElementById('osMarkmap');
+    const status = document.getElementById('markmapStatus');
+    const foldButton = document.getElementById('foldChapters');
+    const expandButton = document.getElementById('expandMap');
+    const fitButton = document.getElementById('fitMap');
+
+    const enableControls = () => {
+      foldButton.disabled = false;
+      expandButton.disabled = false;
+      fitButton.disabled = false;
+      status.textContent = 'Dica: clique nos nós para abrir/fechar ramos. O toolbar também oferece zoom e níveis de expansão.';
+    };
+
+    view.addEventListener('render', enableControls, { once: true });
+    view.addEventListener('error', () => {
+      status.textContent = 'Não foi possível carregar o Markmap. Confirme que o servidor local está online e que há acesso à internet para carregar a biblioteca.';
+    });
+
+    foldButton.addEventListener('click', () => {
+      view.mm?.foldToLevel(2);
+      view.mm?.fit();
+    });
+    expandButton.addEventListener('click', () => {
+      view.mm?.expandAll();
+      view.mm?.fit();
+    });
+    fitButton.addEventListener('click', () => view.mm?.fit());
+  }
+
   function renderMap(map) {
+    if (map.id === 'so') {
+      renderMarkmapMap(map);
+      return;
+    }
+
     activeMap = map;
     document.documentElement.style.setProperty('--subject', subjectColor(map.id));
     const reviewed = getReviewed(map.id);
