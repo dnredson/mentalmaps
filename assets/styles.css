@@ -561,3 +561,131 @@ h1 {
   }
   .detail { margin-top: 18px; }
 }
+
+
+/* Markmap / mapa hierárquico */
+.study-status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.study-status > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 253, 248, .92);
+}
+
+.study-status strong {
+  font-size: .88rem;
+}
+
+.study-status span {
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.4;
+}
+
+.markmap-shell {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255, 253, 248, .96);
+  box-shadow: var(--shadow);
+}
+
+.markmap-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.markmap-head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.markmap-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.markmap-actions .btn:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+markmap-view {
+  display: block;
+  width: 100%;
+  height: 760px;
+  --mm-bg: #fffdf8;
+}
+
+markmap-view::part(toolbar) {
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+}
+
+.map-help {
+  margin: 0;
+  padding: 10px 18px 14px;
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.map-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.map-notes article {
+  display: flex;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: rgba(255, 253, 248, .90);
+}
+
+.map-notes article > span {
+  font-size: 1.25rem;
+}
+
+.map-notes strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.map-notes p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .86rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .study-status, .map-notes { grid-template-columns: 1fr; }
+  .markmap-head { align-items: stretch; flex-direction: column; }
+  markmap-view { height: 680px; }
+}
+
+@media print {
+  .study-status, .markmap-head, .map-help, .map-notes { display: none !important; }
+  .markmap-shell { border: 0; box-shadow: none; }
+  markmap-view { height: 900px; }
+}
